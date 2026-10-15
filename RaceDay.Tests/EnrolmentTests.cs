@@ -1,4 +1,3 @@
-﻿
 using Xunit;
 using RaceDay.Data;
 
@@ -23,6 +22,22 @@ namespace RaceDay.Tests
             Assert.Equal(9, enrolment.UserID);
             Assert.Equal(30, enrolment.CategoryID);
             Assert.Equal(102, enrolment.RaceNumber);
+        }
+
+        [Fact]
+        public void Enrolment_CanStoreDifferentRaceNumber()
+        {
+            // Arrange
+            var enrolment = new Enrolment
+            {
+                UserID = 9,
+                CategoryID = 1,
+                RaceNumber = 101
+            };
+
+            // Assert
+            Assert.Equal(101, enrolment.RaceNumber);
+            Assert.Equal(1, enrolment.CategoryID);
         }
     }
 }
