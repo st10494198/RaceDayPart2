@@ -1,4 +1,4 @@
-﻿
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +15,21 @@ namespace RaceDay.Controllers
         public EventsController(RaceDayContext db)
         {
             _db = db;
+        }
+
+        // Validate event details
+        private string? ValidateEvent(Event eventItem)
+        {
+            if (string.IsNullOrWhiteSpace(eventItem.EventName))
+                return "Event name is required.";
+
+            if (string.IsNullOrWhiteSpace(eventItem.Location))
+                return "Event location is required.";
+
+            if (eventItem.EventDate == default)
+                return "A valid event date is required.";
+
+            return null;
         }
 
         // GET: api/events
@@ -42,6 +57,11 @@ namespace RaceDay.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateEvent(Event eventItem)
         {
+            var error = ValidateEvent(eventItem);
+
+            if (error != null)
+                return BadRequest(new { message = error });
+
             eventItem.EventID = 0;
 
             _db.Events.Add(eventItem);
@@ -56,7 +76,8 @@ namespace RaceDay.Controllers
         // PUT: api/events/1
         [Authorize(Roles = "Organiser")]
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> UpdateEvent(int id, Event updatedEvent)
+        public async Task<IActionResult> UpdateEvent(
+            int id, Event updatedEvent)
         {
             if (id != updatedEvent.EventID)
                 return BadRequest(new { message = "Event ID does not match." });
@@ -66,11 +87,15 @@ namespace RaceDay.Controllers
             if (existingEvent == null)
                 return NotFound(new { message = "Event not found." });
 
+            var error = ValidateEvent(updatedEvent);
+
+            if (error != null)
+                return BadRequest(new { message = error });
+
             existingEvent.EventName = updatedEvent.EventName;
             existingEvent.EventDate = updatedEvent.EventDate;
             existingEvent.Location = updatedEvent.Location;
             existingEvent.Description = updatedEvent.Description;
-            existingEvent.OrganiserID = updatedEvent.OrganiserID;
 
             await _db.SaveChangesAsync();
 
