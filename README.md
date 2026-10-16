@@ -118,7 +118,11 @@ Run the tests in Visual Studio:
 GitHub Actions is used to build the project and run automated tests whenever the configured workflow is triggered.
 
 **Build and test evidence:**  
-Insert a screenshot of the successful GitHub Actions workflow here.
+### CI/CD Build Evidence
+
+The GitHub Actions workflow completed successfully.
+
+![Green CI/CD Build](CI_CD_Green_Build.png)
 
 ## 11. Project Files
 
