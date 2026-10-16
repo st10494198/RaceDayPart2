@@ -1,4 +1,4 @@
-﻿
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -37,11 +37,34 @@ namespace RaceDay.Controllers
             return Ok(category);
         }
 
+        // Validate category details
+        private async Task<string?> ValidateCategory(Category category)
+        {
+            if (string.IsNullOrWhiteSpace(category.CategoryName))
+                return "Category name is required.";
+
+            if (category.Distance <= 0)
+                return "Distance must be greater than zero.";
+
+            var eventExists = await _db.Events
+                .AnyAsync(e => e.EventID == category.EventID);
+
+            if (!eventExists)
+                return "The selected event does not exist.";
+
+            return null;
+        }
+
         // POST: api/categories
         [Authorize(Roles = "Organiser")]
         [HttpPost]
         public async Task<IActionResult> CreateCategory(Category category)
         {
+            var error = await ValidateCategory(category);
+
+            if (error != null)
+                return BadRequest(new { message = error });
+
             category.CategoryID = 0;
 
             _db.Categories.Add(category);
@@ -66,6 +89,11 @@ namespace RaceDay.Controllers
 
             if (existingCategory == null)
                 return NotFound(new { message = "Category not found." });
+
+            var error = await ValidateCategory(updatedCategory);
+
+            if (error != null)
+                return BadRequest(new { message = error });
 
             existingCategory.CategoryName = updatedCategory.CategoryName;
             existingCategory.Distance = updatedCategory.Distance;
