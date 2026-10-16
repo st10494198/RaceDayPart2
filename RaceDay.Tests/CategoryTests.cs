@@ -19,7 +19,7 @@ namespace RaceDay.Tests
 
             Assert.Equal(1, category.CategoryID);
             Assert.Equal("5km Fun Run", category.CategoryName);
-            Assert.Equal(5, category.Distance);
+            Assert.Equal(5m, category.Distance);
             Assert.Equal(11, category.EventID);
         }
 
@@ -34,7 +34,7 @@ namespace RaceDay.Tests
             };
 
             Assert.Equal("10km Race", category.CategoryName);
-            Assert.Equal(10, category.Distance);
+            Assert.Equal(10m, category.Distance);
         }
 
         [Fact]
@@ -43,12 +43,12 @@ namespace RaceDay.Tests
             var category = new Category
             {
                 CategoryName = "Half Marathon",
-                Distance = 21.1,
+                Distance = 21.1m,
                 EventID = 12
             };
 
             Assert.Equal("Half Marathon", category.CategoryName);
-            Assert.Equal(21.1, category.Distance);
+            Assert.Equal(21.1m, category.Distance);
             Assert.Equal(12, category.EventID);
         }
     }
