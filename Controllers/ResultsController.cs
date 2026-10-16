@@ -1,53 +1,3 @@
-﻿
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
-using RaceDay.Data;
-
-namespace RaceDay.Controllers
-{
-    [ApiController]
-    [Route("api/results")]
-    public class ResultsController : ControllerBase
-    {
-        private readonly RaceDayContext _db;
-
-        public ResultsController(RaceDayContext db)
-        {
-            _db = db;
-        }
-
-        // Organiser can view all results
-        [HttpGet]
-        [Authorize(Roles = "Organiser")]
-        public async Task<IActionResult> GetResults()
-        {
-            var results = await _db.Results.ToListAsync();
-            return Ok(results);
-        }
-
-        // Participant can view their own results
-        [HttpGet("my")]
-        [Authorize(Roles = "Participant")]
-        public async Task<IActionResult> GetMyResults()
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (!int.TryParse(userId, out int participantId))
-                return Unauthorized();
-
-            var results = await (
-                from result in _db.Results
-                join enrolment in _db.Enrolments
-                    on result.EnrolmentID equals enrolment.EnrolmentID
-                where enrolment.UserID == participantId
-                select result
-            ).ToListAsync();
-
-            return Ok(results);
-        }
-
         // Organiser can record a race result
         [HttpPost]
         [Authorize(Roles = "Organiser")]
@@ -64,11 +14,40 @@ namespace RaceDay.Controllers
                 });
             }
 
+            if (result.FinishTime < TimeSpan.Zero)
+            {
+                return BadRequest(new
+                {
+                    message = "Finish time cannot be negative."
+                });
+            }
+
             if (result.Position < 1)
             {
                 return BadRequest(new
                 {
                     message = "Position must be at least 1."
+                });
+            }
+
+            var validStatuses = new[] { "Finished", "Did Not Finish", "Disqualified" };
+
+            if (!validStatuses.Contains(result.Status))
+            {
+                return BadRequest(new
+                {
+                    message = "Status must be Finished, Did Not Finish, or Disqualified."
+                });
+            }
+
+            var resultExists = await _db.Results
+                .AnyAsync(r => r.EnrolmentID == result.EnrolmentID);
+
+            if (resultExists)
+            {
+                return Conflict(new
+                {
+                    message = "A result already exists for this enrolment."
                 });
             }
 
@@ -82,5 +61,3 @@ namespace RaceDay.Controllers
                 new { id = result.ResultID },
                 result);
         }
-    }
-}
