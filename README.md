@@ -1,88 +1,94 @@
-
 # RaceDay Part 2 – Event Management API
 
 ## 1. Project Overview
+
 RaceDay is an event management system for road running, walking, and cycling events. It uses an ASP.NET Core Web API to manage events, categories, participant enrolments, and race results.
 
-## 2. Technologies Used
+The system allows organisers to manage events and results while participants can register and enrol in event categories.
+
+## 2. Project Objectives
+
+The main objectives of the RaceDay project are to:
+
+- Develop an API for managing sporting events.
+- Allow users to register and log in securely.
+- Give organisers and participants different access permissions.
+- Manage events, categories, enrolments, and results.
+- Store and retrieve information using Microsoft SQL Server.
+- Test the system using automated unit tests.
+- Use GitHub Actions to build the project and run tests automatically.
+
+## 3. Technologies Used
+
+The project uses the following technologies:
+
 - C#
 - ASP.NET Core Web API
 - Entity Framework Core
 - Microsoft SQL Server
-- Swagger
+- Swagger / OpenAPI
 - JWT Authentication
 - xUnit Testing
-- GitHub Actions
 - Visual Studio
+- GitHub and GitHub Actions
 
-## 3. Main Features
-- User registration and login
-- Password hashing
-- JWT authentication
-- Role-based access for Organisers and Participants
-- Event and category management
-- Participant enrolments
-- Race results management
-- API documentation through Swagger
-- Automated unit tests
-- Automated build and test checks through GitHub Actions
+## 4. Main Features
 
-## 4. API Endpoints
+The main features of the system include:
+
+- User registration and login.
+- Password hashing.
+- JWT authentication.
+- Role-based access for Organisers and Participants.
+- Event management.
+- Category management.
+- Participant enrolments.
+- Race results management.
+- Database connectivity using Entity Framework Core.
+- API documentation and testing through Swagger.
+- Automated unit tests.
+- Automated builds and tests using GitHub Actions.
+
+## 5. API Endpoints
+
+The following table lists the main API endpoints.
 
 | Method | Endpoint | Purpose |
 |---|---|---|
-| GET | /api/events | View events |
-| GET | /api/events/{id} | View one event |
-| POST | /api/events | Create an event |
-| PUT | /api/events/{id} | Update an event |
-| DELETE | /api/events/{id} | Delete an event |
-| GET | /api/categories | View categories |
-| GET | /api/categories/{id} | View one category |
-| POST | /api/categories | Create a category |
-| PUT | /api/categories/{id} | Update a category |
-| DELETE | /api/categories/{id} | Delete a category |
-| GET | /api/enrolments | View all enrolments |
-| GET | /api/enrolments/my | View your enrolments |
-| POST | /api/enrolments | Register for a category |
-| GET | /api/results | View race results |
-| GET | /api/results/my | View your results |
-| POST | /api/results | Record a race result |
+| POST | `/api/auth/register` | Register a new user |
+| POST | `/api/auth/login` | Log in and receive a token |
+| GET | `/api/events` | View all events |
+| GET | `/api/events/{id}` | View one event |
+| POST | `/api/events` | Create an event |
+| PUT | `/api/events/{id}` | Update an event |
+| DELETE | `/api/events/{id}` | Delete an event |
+| GET | `/api/categories` | View all categories |
+| GET | `/api/categories/{id}` | View one category |
+| POST | `/api/categories` | Create a category |
+| PUT | `/api/categories/{id}` | Update a category |
+| DELETE | `/api/categories/{id}` | Delete a category |
+| GET | `/api/enrolments` | View all enrolments |
+| GET | `/api/enrolments/my` | View your enrolments |
+| POST | `/api/enrolments` | Enrol in a category |
+| GET | `/api/results` | View race results |
+| GET | `/api/results/my` | View your own results |
+| POST | `/api/results` | Record a race result |
 
-Organiser-only and Participant-only permissions apply to the relevant endpoints. See `API_Endpoint_Plan.md` for more details.
+Some endpoints require authentication and specific roles. Organisers and Participants have different permissions.
 
-## 5. Database
-The application uses Microsoft SQL Server and Entity Framework Core to access the RaceDay database.
+For more information about endpoint methods, access requirements, inputs, and responses, see `API_Endpoint_Plan.md`.
 
-Update the database connection settings in `appsettings.json` for your own environment before running the application. Never upload passwords, private keys, or other secrets.
+*Note: The endpoint list should match the routes actually implemented in the application.*
 
-## 6. Running the Project
-1. Open `RaceDay.sln` in Visual Studio.
-2. Check the database connection settings.
-3. Make sure SQL Server is running and the RaceDay database is available.
-4. Build the solution.
-5. Run the RaceDay project.
-6. Open the Swagger page to test the API endpoints.
+## 6. Database
 
-## 7. Testing
-The `RaceDay.Tests` project contains automated tests written using xUnit.
+The application uses Microsoft SQL Server to store information about users, events, categories, enrolments, and race results.
 
-To run the tests:
-1. Open the solution in Visual Studio.
-2. Open Test Explorer.
-3. Run all tests.
-4. Check that the tests pass.
+Entity Framework Core is used to communicate with the database.
 
-GitHub Actions also builds the solution and runs the automated tests when changes are pushed to the repository.
+Before running the project:
 
-## 8. Repository Structure
-- `RaceDay` – Main Web API project.
-- `RaceDay.Tests` – Automated test project.
-- `RaceDay.sln` – Visual Studio solution.
-- `API_Endpoint_Plan.md` – API endpoint documentation.
-- `.github/workflows` – Automated build and test workflow.
-
-## 9. Author
-Jay Mphaphuli
-
-## 10. Project Purpose
-This project demonstrates the development of an event management API with database connectivity, authentication, role-based access, documentation, and automated testing.
+1. Make sure Microsoft SQL Server is installed and running.
+2. Create or restore the RaceDay database using the database script or setup method provided for the project.
+3. Check the connection string in `appsettings.json`.
+4. Update the connection string to
