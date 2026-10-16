@@ -122,7 +122,8 @@ GitHub Actions is used to build the project and run automated tests whenever the
 
 The GitHub Actions workflow completed successfully.
 
-![Green CI/CD Build](CI_CD_Green_Build.png)
+![Green CI/CD Build](<img width="1350" height="720" alt="CI_CD_Green_Bui Id" src="https://github.com/user-attachments/assets/2109e766-87f7-478d-b5df-9d17222bba48" />
+)
 
 ## 11. Project Files
 
